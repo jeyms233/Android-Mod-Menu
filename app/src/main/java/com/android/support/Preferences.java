@@ -22,7 +22,7 @@ public class Preferences {
     private static final long DEFAULT_LONG_VALUE = 0L; //-1L
     private static final boolean DEFAULT_BOOLEAN_VALUE = false;
 
-    public static native void Changes(Context context, int featNum, String featName, int value , long Lvalue, boolean isOn, String inputText);
+    public static native void Changes(Context context, int featNum, String featName, int value, long Lvalue, boolean isOn, String inputText);
 
     public static void changeFeatureInt(String featureName, int featureNum, int value) {
         Preferences.with(context).writeInt(featureNum, value);

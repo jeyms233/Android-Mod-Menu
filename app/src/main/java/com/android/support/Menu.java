@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -59,6 +60,7 @@ import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
 import static android.widget.RelativeLayout.ALIGN_PARENT_LEFT;
 import static android.widget.RelativeLayout.ALIGN_PARENT_RIGHT;
 
@@ -92,7 +94,7 @@ public class Menu {
     int SeekBarProgressColor = Color.parseColor("#80CBC4");
     int CheckBoxColor = Color.parseColor("#80CBC4");
     int RadioColor = Color.parseColor("#FFFFFF");
-    int CollapColor = Color.parseColor("#232F2C");
+	int CollapseColor = Color.parseColor("#232F2C");
     String NumberTxtColor = "#41c300";
     //********************************************************************//
 
@@ -180,7 +182,7 @@ public class Menu {
                 "</html>", "text/html", "utf-8");
         wView.setBackgroundColor(0x00000000); //Transparent
         wView.setAlpha(ICON_ALPHA);
-        wView.getSettings().setAppCacheEnabled(true);
+        wView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         wView.setOnTouchListener(onTouchListener());
 
         //********** Settings icon **********
@@ -351,7 +353,12 @@ public class Menu {
     public void SetWindowManagerWindowService() {
         //Variable to check later if the phone supports Draw over other apps permission
         int iparams = Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ? 2038 : 2002;
-        vmParams = new WindowManager.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, iparams, 8, -3);
+        vmParams = new WindowManager.LayoutParams(
+                WRAP_CONTENT,
+                WRAP_CONTENT,
+                iparams,
+                8 | FLAG_TRANSLUCENT_STATUS,
+                -3);
         //params = new WindowManager.LayoutParams(WindowManager.LayoutParams.LAST_APPLICATION_WINDOW, 8, -3);
         vmParams.gravity = 51;
         vmParams.x = POS_X;
@@ -441,10 +448,9 @@ public class Menu {
         LinearLayout llBak = linearLayout;
 
         for (int i = 0; i < listFT.length; i++) {
-            String feature = listFT[i];
-            //Log.i("featureList", listFT[i]);
-
             boolean switchedOn = false;
+            //Log.i("featureList", listFT[i]);
+            String feature = listFT[i];
             if (feature.contains("_True")) {
                 switchedOn = true;
                 feature = feature.replaceFirst("_True", "");
@@ -456,9 +462,9 @@ public class Menu {
                 linearLayout = mCollapse;
                 feature = feature.replaceFirst("CollapseAdd_", "");
             }
+            String[] str = feature.split("_");
 
             //Assign feature number
-            String[] str = feature.split("_");
             if (TextUtils.isDigitsOnly(str[0]) || str[0].matches("-[0-9]*")) {
                 featNum = Integer.parseInt(str[0]);
                 feature = feature.replaceFirst(str[0] + "_", "");
@@ -467,7 +473,6 @@ public class Menu {
                 //Subtract feature number. We don't want to count ButtonLink, Category, RichTextView and RichWebView
                 featNum = i - subFeat;
             }
-
             String[] strSplit = feature.split("_");
             switch (strSplit[0]) {
                 case "Toggle":
@@ -494,7 +499,7 @@ public class Menu {
                         InputNum(linearLayout, featNum, strSplit[2], Integer.parseInt(strSplit[1]));
                     if (strSplit.length == 2)
                         InputNum(linearLayout, featNum, strSplit[1], 0);
-                    break;
+						break;
                 case "InputLValue":
                     if (strSplit.length == 3)
                         InputLNum(linearLayout, featNum, strSplit[2], Long.parseLong(strSplit[1]));
@@ -803,8 +808,7 @@ public class Menu {
 
                         button.setText(Html.fromHtml(featName + ": <font color='" + NumberTxtColor + "'>" + num + "</font>"));
                         Preferences.changeFeatureInt(featName, featNum, num);
-
-                        editText.setFocusable(false);
+editText.setFocusable(false);
                     }
                 });
 
@@ -1067,7 +1071,7 @@ public class Menu {
         mCollapse = collapseSub;
 
         final TextView textView = new TextView(getContext);
-        textView.setBackgroundColor(CollapColor);
+        textView.setBackgroundColor(CollapseColor);
         textView.setText("▽ " + text + " ▽");
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(TEXT_COLOR_2);
@@ -1125,7 +1129,7 @@ public class Menu {
         wView.loadData(text, "text/html", "utf-8");
         wView.setBackgroundColor(0x00000000); //Transparent
         wView.setPadding(0, 5, 0, 5);
-        wView.getSettings().setAppCacheEnabled(false);
+        wView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         linLayout.addView(wView);
     }
 
