@@ -1,6 +1,4 @@
-//Credit: Raunak Mods - https://t.me/raunakmods786
-
-package com.android.support;
+ com.android.support;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,6 +46,7 @@ import java.util.Date;
 public final class CrashHandler {
 
     public static final UncaughtExceptionHandler DEFAULT_UNCAUGHT_EXCEPTION_HANDLER = Thread.getDefaultUncaughtExceptionHandler();
+    private static File crashFile;
 
     public static void init(final Context app, final boolean overlayRequired) {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -79,7 +78,7 @@ public final class CrashHandler {
                     dirName = String.valueOf(app.getExternalFilesDir(null));
                 }
 
-                File crashFile = new File(dirName, fileName);
+                crashFile = new File(dirName, fileName);
 
                 String versionName = "unknown";
                 long versionCode = 0;
@@ -140,5 +139,22 @@ public final class CrashHandler {
             }
         });
     }
-}
 
+    public static String getCrashLogFilePath() {
+        if (crashFile != null) {
+            return crashFile.getAbsolutePath();
+        }
+        return null;
+    }
+
+    public static String getCrashLogContent() {
+        if (crashFile != null && crashFile.exists()) {
+            try {
+                return new String(java.nio.file.Files.readAllBytes(crashFile.toPath()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+}

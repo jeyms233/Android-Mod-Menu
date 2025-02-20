@@ -37,4 +37,11 @@ public class Main {
 
         CheckOverlayPermission(context);
     }
+
+    public static boolean getOverlayPermissionStatus(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return Settings.canDrawOverlays(context);
+        }
+        return true;
+    }
 }
