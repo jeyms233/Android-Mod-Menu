@@ -495,4 +495,8 @@ public class Preferences {
     public void clear() {
         sharedPreferences.edit().clear().apply();
     }
+
+    public static boolean getPreferencesStatus() {
+        return loadPref;
+    }
 }

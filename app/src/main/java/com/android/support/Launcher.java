@@ -71,4 +71,9 @@ public class Launcher extends Service {
     public int onStartCommand(Intent intent, int i, int i2) {
         return Service.START_NOT_STICKY;
     }
+
+    // Add a new method getMenuVisibility to return the menu visibility status
+    public boolean getMenuVisibility() {
+        return menu != null && menu.rootFrame != null && menu.rootFrame.getVisibility() == View.VISIBLE;
+    }
 }

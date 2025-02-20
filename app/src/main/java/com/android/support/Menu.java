@@ -1,5 +1,3 @@
-//Please don't replace listeners with lambda!
-
 package com.android.support;
 
 import android.annotation.SuppressLint;
@@ -1156,5 +1154,9 @@ editText.setFocusable(false);
         if (rootFrame != null) {
             mWindowManager.removeView(rootFrame);
         }
+    }
+
+    public boolean getMenuStatus() {
+        return mExpanded.getVisibility() == View.VISIBLE;
     }
 }
